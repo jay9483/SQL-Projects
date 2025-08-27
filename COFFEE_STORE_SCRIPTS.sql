@@ -32,7 +32,7 @@ order by
 
 
 
-/*💰 Pricing & Product Insights
+/*Pricing & Product Insights
 4 What is the average unit price of products in each category?*/
 select avg(unit_price) as 'Average Price', product_category
 from sales_revenue
