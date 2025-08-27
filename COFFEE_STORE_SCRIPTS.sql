@@ -1123,3 +1123,152 @@ FROM sales_revenue
 group by store_location
 order by 'Average transactions';
 
+
+select * from sales_revenue;
+
+#Which product type generated the highest total revenue?
+select * from sales_revenue;
+
+select product_type, round(sum(transaction_qty * unit_price),3) as 'Total Sales'
+from sales_revenue
+group by product_type
+order by 'Total Sales' desc;
+
+#What is the total revenue per product detail across all stores?
+select product_detail, round(sum(transaction_qty * unit_price),3) as 'Total Revenue'
+from sales_revenue
+group by product_detail
+order by 'Total Revenue';
+
+#Which product category has the highest average revenue per transaction?
+select * from sales_revenue;
+
+select product_category, round(avg(transaction_qty * unit_price),3) as 'Average Revenue'
+from sales_revenue
+group by product_category
+order by round(avg(transaction_qty * unit_price),3) desc;
+
+#What is the revenue contribution percentage of each store location?
+select * from sales_revenue;
+
+select store_location, round(round(sum(transaction_qty * unit_price),3) * 100 / (select sum(transaction_qty * unit_price) from sales_revenue),3) as 'Percentage Contribution to Sales'
+from sales_revenue
+group by store_location
+order by 'Percentage Contribution to Sales' desc;
+
+
+# Time-Based Analysis
+#What is the average revenue per transaction for each day of the week?
+select * from sales_revenue;
+
+SELECT 
+	DAYNAME(transaction_date) AS WEEKDAY, 
+	ROUND(AVG(transaction_qty * unit_price),3) AS avg_revenue_per_transaction
+FROM 
+	sales_revenue
+GROUP BY 
+	WEEKDAY
+ORDER BY avg_revenue_per_transaction desc;
+
+
+#Which day of the week has the highest number of transactions?
+SELECT
+	DAYNAME(transaction_date) as 'Weekday', 
+    count(*) as 'Total quantity sold'
+FROM
+	sales_revenue
+GROUP BY DAYNAME(transaction_date)
+ORDER BY 'Total quantity sold' desc; 
+
+#What is the hourly distribution of transactions across all stores?
+select 
+	extract(hour from transaction_time) as 'Hour of the day',
+    count(*) as 'Transaction count'
+from sales_revenue
+group by extract(hour from transaction_time)
+order by 'Hour of the day' asc;
+
+#Which month had the highest average unit price across all products?
+select
+	round(avg(unit_price),3), product_category
+from sales_revenue
+group by product_category
+order by round(avg(unit_price),3);
+
+# Store Performance
+#Which store sold the most quantity of products in total?
+(select 
+	store_id,
+	store_location, 
+    sum(transaction_qty) as 'Quantity of products sold'
+from 
+	sales_revenue
+group by 
+	store_id,
+	store_location
+order by 
+	sum(transaction_qty) desc limit 1);
+
+#What is the average transaction quantity per store per month?
+select 
+	store_location,
+    store_id,
+	extract(year from transaction_date) as 'year',
+    extract(month from transaction_date) as 'Month',
+    avg(transaction_qty) as 'Average Transaction quantity'
+from 
+	sales_revenue
+group by 
+	store_location,
+	store_id,
+	extract(year from transaction_date),
+    extract(month from transaction_date)
+order by 
+	'Year','Month',store_id;
+
+
+#Which store has the highest average revenue?
+select 
+	round(avg(transaction_qty * unit_price),3) as 'Average revenue', store_location
+    from sales_revenue
+    group by store_location
+    order by avg(transaction_qty * unit_price) desc limit 1;
+
+
+# Advanced Queries
+#Find the top 3 products by revenue in each store location.
+select product_type, round(sum(transaction_qty * unit_price),3) as 'Revenue', store_location
+from sales_revenue
+group by product_type, store_location
+order by sum(transaction_qty * unit_price) desc limit 3;
+
+#Which product category has the most diverse product types?
+select product_category,
+	count(distinct product_type) as 'Product types'
+    from sales_revenue
+    group by product_category
+    order by 'Product types';
+
+#Which product detail appears in the most transactions?
+select 
+	product_detail 'Product detail',
+	product_category as 'Prodcut category', 
+	product_type as 'Product type',
+	count(distinct transaction_id) as 'Most appeared'
+    from sales_revenue
+    group by product_detail,product_category, product_type
+    order by 'Most appeared';
+
+#What is the average unit price of products sold before 10 AM vs. after 10 AM?
+select * from sales_revenue;
+
+select 
+case
+	when extract(hour from transaction_time) < 10 then 'before 10 AM'
+    else 'After 10 AM'
+end as time_preiod,
+round(avg(unit_price),3) as 'Average price',
+count(*) as 'units sold'
+from sales_revenue
+group by time_preiod
+order by time_preiod;
