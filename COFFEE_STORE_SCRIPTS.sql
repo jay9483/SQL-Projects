@@ -1,3 +1,6 @@
+CREATE SCHEMA sales_dash;
+
+USE sales_dash;
 
 CREATE TABLE sales_revenue (
     transaction_id INT,
