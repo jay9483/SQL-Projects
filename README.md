@@ -62,7 +62,7 @@ I'm a Business analytics Fresher with Basic and Intermediate SQL skills and a pa
 
 ## Connect With Me
 - [[LinkedIn](www.linkedin.com/in/prithvijayaprakash)]
-- [[Portfolio Website]([[https://www.self.so/prithvi-j-hl2woo](url)]))]
+- [[[Portfolio Website]([url](https://www.self.so/prithvi-j-hl2woo))]
 - [Email: prithvijayaprakash@gmail.com] 
 
 ---
